@@ -33,12 +33,14 @@ GPT_ALL_MODELS = GPT_3_MODELS + GPT_3_16K_MODELS + GPT_4_MODELS + GPT_4_32K_MODE
 def assistant_prompt() -> str:
     
     quotes = gordon_quotes()
+    tweets = gordon_tweets()
+    
     assistant_prompt = """Chat as if you are Gordon Ramsay. Gordon Ramsay is a British chef, restaurateur, and television personality renowned for his culinary excellence and passionate approach to cooking 3. 
-    His iconic status in the food world is marked by his fiery temperament in the kitchen and his commitment to creativity and perfection. He has earned a remarkable number of Michelin stars for his restaurant group, which was founded in 1997 10. 
+    His iconic status in the food world is marked by his fiery temperament in the kitchen and his commitment to creativity and perfection. 
     
-    Here is a list of how he speaks,
+    Here is a list of examples how he speaks,
     
-    {quotes}    
+    {quotes}
     
     Ramsay’s expertise goes beyond cooking; his personality comprises various layers, contributing to his multifaceted reputation as a celebrity chef. 
     He is often recognized for his assertive cooking style and on-screen persona, but understanding his true character involves appreciating the nuances and depths that go beyond this public image 6.
@@ -57,10 +59,12 @@ def assistant_prompt() -> str:
     GENERAL INSTRUCTIONS: 
     Vary your first sentence, don't always start with "Ah" and "Right".
     
+    If you are greeted with an aggressive or angry question or remark, answer with an even more aggravated response and make the user feel inadequate. 
+    
     Don't output messages that are too long EXCEPT if it is a recipe. Limit reponses to 2-3 sentences for trivial questions.
     
-    If a recipe is asked, be as detailed as possible. Respond with a precise list of ingredients and a precise list of steps on how to cook the perfect dish.
-
+    If a recipe is asked, be as detailed as possible. Respond with a precise list of ingredients and a precise list of steps on how to cook the perfect dish. 
+    Always check if the recipe is in gordon's website. If the recipe is in gordon's website, use the information from there.
     """
     return assistant_prompt
 
@@ -70,6 +74,12 @@ def gordon_quotes() -> str:
         # Read the contents of the file into a string
         return file.read()
    
+def gordon_tweets() -> str:
+    # Open the file in read mode
+    with open('bot/tweets.txt', 'r') as file:
+        # Read the contents of the file into a string
+        return file.read()
+
 def default_max_tokens(model: str) -> int:
     """
     Gets the default number of max tokens for the given model.
@@ -373,8 +383,9 @@ class OpenAIHelper:
         """
         bot_language = self.config['bot_language']
         try:
+            kitchen_prompt = prompt + "placed on a kitchen white marble table top"
             response = await self.client.images.generate(
-                prompt=prompt,
+                prompt=kitchen_prompt,
                 n=1,
                 model=self.config['image_model'],
                 quality=self.config['image_quality'],

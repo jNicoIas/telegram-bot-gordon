@@ -76,7 +76,14 @@ class ChatGPTTelegramBot:
                 '\n\n' +
                 localized_text('help_text', bot_language)[2]
         )
+        audio_path = "bot/gordon_intro_cut.mp3"
         await update.message.reply_text(help_text, disable_web_page_preview=True)
+        # await update.message.send_voice(voice=open(audio_path, 'rb'), disable_web_page_preview=True)
+        await update.effective_message.reply_voice(
+                    reply_to_message_id=get_reply_to_message_id(self.config, update),
+                    voice=open(audio_path, 'rb')
+                )
+        
 
     async def stats(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         """
@@ -183,6 +190,7 @@ class ChatGPTTelegramBot:
 
         usage_text = text_current_conversation + text_today + text_month + text_budget
         await update.message.reply_text(usage_text, parse_mode=constants.ParseMode.MARKDOWN)
+        
 
     async def resend(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         """
@@ -287,7 +295,7 @@ class ChatGPTTelegramBot:
 
     async def tts(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         """
-        Generates an speech for the given input using TTS APIs
+        Generates a speech for the given input using TTS APIs
         """
         if not self.config['enable_tts_generation'] \
                 or not await self.check_allowed_and_within_budget(update, context):
