@@ -29,8 +29,8 @@ def main():
     ASST_PROMPT = assistant_prompt()
     
     # Setup configurations
-    # model = os.environ.get('OPENAI_MODEL', 'gpt-3.5-turbo')
-    model = os.environ.get('OPENAI_MODEL', 'gpt-4-1106-preview')
+    model = os.environ.get('OPENAI_MODEL', 'gpt-3.5-turbo')
+    # model = os.environ.get('OPENAI_MODEL', 'gpt-4-1106-preview')
     functions_available = are_functions_available(model=model)
     max_tokens_default = default_max_tokens(model=model)
     openai_config = {
@@ -86,7 +86,7 @@ def main():
         'enable_image_generation': os.environ.get('ENABLE_IMAGE_GENERATION', 'true').lower() == 'true',
         'enable_transcription': os.environ.get('ENABLE_TRANSCRIPTION', 'true').lower() == 'true',
         'enable_vision': os.environ.get('ENABLE_VISION', 'true').lower() == 'true',
-        'enable_tts_generation': os.environ.get('ENABLE_TTS_GENERATION', 'true').lower() == 'true',
+        'enable_tts_generation': os.environ.get('ENABLE_TTS_GENERATION', 'true').lower() == 'false',
         'budget_period': os.environ.get('BUDGET_PERIOD', 'monthly').lower(),
         'user_budgets': os.environ.get('USER_BUDGETS', os.environ.get('MONTHLY_USER_BUDGETS', '*')),
         'guest_budget': float(os.environ.get('GUEST_BUDGET', os.environ.get('MONTHLY_GUEST_BUDGET', '100.0'))),
